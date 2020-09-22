@@ -1,4 +1,5 @@
-Flow of execution and variable scope
+title: Flow-of-execution-and-variable-scope
+date: 2020-09-22
 
 In my Udemy class, a student asked why the output of the below function is 100 and not 50. Here, I take a stab at answering.
 
