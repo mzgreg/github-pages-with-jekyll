@@ -1,0 +1,159 @@
+I completed my first milestone project - a Tic Tac Toe game!
+
+#Func 1: Creates board (squares align with laptop number pad)
+#import clear_output to clear screen between moves
+from IPython.display import clear_output
+
+def display_board(board):
+    clear_output()
+    print(board[7] + ' | ' + board[8] + ' | ' + board[9])
+    print('---------')
+    print(board[4] + ' | ' + board[5] + ' | ' + board[6])
+    print('---------')
+    print(board[1] + ' | ' + board[2] + ' | ' + board[3])
+
+
+#Func 2: Asks player 1 if they want to be X or O and assigns marker
+def assign_marker():
+    
+    '''
+    Output = (player 1 marker, player 2 marker)
+    '''
+    
+    marker = ''
+    
+    while marker != 'X' and marker != 'O':
+        
+        marker = input('Player 1, would you like to be X or O? ').upper()
+        
+        if marker == 'X':
+            print('Player 1 is X!')
+            return('X','O')
+        else:
+            print('Player 1 is O!')
+            return ('O','X')
+
+
+#Func 3: Places player's X or O marker on board
+def place_marker(board, marker, position):
+    board[position] = marker
+
+
+#Func 4: Checks to see if X or O marker wins
+def win_check(board, mark):
+    return((board[7]==board[8]==board[9]==mark) or #Across top row
+           (board[4]==board[5]==board[6]==mark) or #Across middle row
+           (board[1]==board[2]==board[3]==mark) or #Across bottom row
+           (board[7]==board[4]==board[1]==mark) or #Up or down left-hand column
+           (board[8]==board[5]==board[2]==mark) or #Up or down middle column
+           (board[9]==board[6]==board[3]==mark) or #Up or down right-hand column
+           (board[7]==board[5]==board[3]==mark) or #Diagonal option 1
+           (board[1]==board[5]==board[9]==mark)) #Diagonal option 2
+
+
+#Func 5: Randomly chooses which player goes first
+import random
+
+def go_first():
+    if random.randint(0,1) == 0:
+        return 'Player 2'
+    else:
+        return 'Player 1'
+
+
+#Func 6: Checks if space on board is open
+def open_space_check(board, position):
+    if board[position] == ' ':
+        return True
+
+
+#Func 7: Checks if board is full
+def full_board_check(board):
+    for i in range(1,10):
+        if open_space_check(board, i):
+            return False
+       
+    return True
+
+
+#Func 8: Asks for player's next position and checks if it's open
+#returns position for later use
+def player_choice(board):
+    
+    choice = 0
+    
+    while choice not in range(1,10) or not open_space_check(board, choice):
+        choice = int(input('Choose a number between 1 and 9: '))
+    
+    return choice
+
+
+#Func 9: Asks player if they want to play again
+def replay():
+    
+    game_again = input('Do you want to play again, Y or N? ').upper()
+    
+    if game_again == 'Y':
+        return True
+
+
+#Combine all functions to run game
+print("Welcome to Megan's Tic Tac Toe game!")
+
+while True:
+    #Set up the board,assign markers, and first player's turn
+    the_board = [' ']*10
+    player1_marker, player2_marker = assign_marker()
+    turn = go_first()
+    print(turn + ', you go first!')
+    
+    play_game = input('Are you ready to play, Y or N? ')
+    
+    if play_game.upper()[0] == 'Y':
+        game_on = True
+    else:
+        game_on = False
+        
+    while game_on:
+        if turn == 'Player 1':
+            #Player 1's turn
+            
+            display_board(the_board)
+            position = player_choice(the_board)
+            place_marker(the_board, player1_marker, position)
+            
+            if win_check(the_board, player1_marker):
+                display_board(the_board)
+                print('Player 1 wins!')
+                game_on = False
+                
+            else:
+                if full_board_check(the_board):
+                    display_board(the_board)
+                    print('Cat wins!')
+                    break
+                else:
+                    turn = 'Player 2'
+            
+        else: 
+            #Player 2's turn
+            
+            display_board(the_board)
+            position = player_choice(the_board)
+            place_marker(the_board, player2_marker, position)
+            
+            if win_check(the_board, player2_marker):
+                display_board(the_board)
+                print('Player 2 wins!')
+                game_on = False
+            else:
+                if full_board_check(the_board):
+                    display_board(the_board)
+                    print('Cat wins!')
+                    break
+                else:
+                    turn = 'Player 1'
+    
+    
+    if not replay():
+        break
